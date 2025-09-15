@@ -1,5 +1,6 @@
 import pandas as pd
 import dagster as dg # type: ignore
+import gcsfs
 
 # sample_data_file = "src/dagster_pg/defs/data/sample_data.csv"
 sample_data_file = "gs://test-tmp-delete-when-done/agents/sample_data.csv"
@@ -7,6 +8,9 @@ processed_data_file = "src/dagster_pg/defs/data/processed_data2.csv"
 
 sample_data_file_excel = "gs://test-tmp-delete-when-done/excel/raw/agents-dagster.xlsx"
 processed_data_file_excel = "gs://test-tmp-delete-when-done/excel/processed/agents-dagster_processedv1.xlsx"
+
+sample_data_file_txt = "gs://test-tmp-delete-when-done/txt/raw/agents-dagster.txt"
+processed_data_file_txt = "gs://test-tmp-delete-when-done/txt/processed/agents-dagster_processedv1.txt"
 
 
 @dg.asset
@@ -31,3 +35,25 @@ def processed_data_execl():
     df["age"] = df["age"] + 10
     df.to_excel(processed_data_file_excel, index=False)
     return "Process Data successfully!!!"
+
+@dg.asset
+def processed_data_txt():
+    fs = gcsfs.GCSFileSystem(
+        project= "myorder-beta",
+        token=""
+    )
+    with fs.open(sample_data_file_txt, "r") as f:
+        lines = f.readlines()
+    
+    process_lines = []
+    for line in lines:
+        parts = line.strip().split(",")
+        if len(parts) > 3:
+            parts[2] = str(int(parts[2]) + 10)
+        process_lines.append(",".join(parts))
+
+
+    with fs.open(processed_data_file_txt, "w") as f:
+        f.write("\n".join(process_lines))
+    
+    return "Data loaded successfully"
