@@ -5,8 +5,8 @@ import dagster as dg # type: ignore
 sample_data_file = "gs://test-tmp-delete-when-done/agents/sample_data.csv"
 processed_data_file = "src/dagster_pg/defs/data/processed_data2.csv"
 
-sample_data_file_excel = "gs://test-tmp-delete-when-done/agents/sample_data.csv"
-processed_data_file_excel = "src/dagster_pg/defs/data/excels/processed_excel.csv"
+sample_data_file_excel = "gs://test-tmp-delete-when-done/excel/raw/agents-dagster.xlsx"
+processed_data_file_excel = "gs://test-tmp-delete-when-done/excel/processed/agents-dagster_processedv1.xlsx"
 
 
 @dg.asset
