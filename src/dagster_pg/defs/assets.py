@@ -1,7 +1,7 @@
 import pandas as pd
 import dagster as dg # type: ignore
 import gcsfs # type: ignore
-from PyPDF2 import PdfReader, PdfWriter, PageObject # type: ignore
+from PyPDF2 import PdfReader # type: ignore
 from io import BytesIO
 
 # sample_data_file = "src/dagster_pg/defs/data/sample_data.csv"
@@ -67,7 +67,7 @@ def processed_data_txt():
 def process_data_pdf():
     fs = gcsfs.GCSFileSystem(
         project= "myorder-beta",
-        token="/Users/nutx/Desktop/Workspaces/PoC/dagster-PG/dagster-pg/src/dagster_pg/defs/key/myorder-275414-2164afd724f0.json"
+        token=""
     )
     with fs.open(sample_data_file_pdf, "rb") as f:
         reader = PdfReader(f)
